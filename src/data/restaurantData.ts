@@ -278,7 +278,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     title: 'La Pomme Confite Signature',
     category: 'Dessert Maison',
     description: 'Pomme fondante confite au caramel, sablé breton pur beurre croustillant et glace vanille maison.',
-    url: '/images/pomme-confite.jpg'
+    url: './images/pomme-confite.jpg'
   },
   {
     id: 'gal-galette-sarrasin',

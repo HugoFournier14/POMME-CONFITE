@@ -77,7 +77,7 @@ export const HistorySection: React.FC = () => {
             {/* Atmospheric photo frame */}
             <div className="relative rounded-3xl overflow-hidden border-2 border-[#3E3024] shadow-2xl shadow-black/80 group">
               <img
-                src="/images/pomme-confite.jpg"
+                src="./images/pomme-confite.jpg"
                 alt="Dessert signature La Pomme Confite"
                 className="w-full h-[420px] object-cover object-center group-hover:scale-105 transition-transform duration-700"
                 referrerPolicy="no-referrer"
