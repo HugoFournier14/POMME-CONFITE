@@ -8,7 +8,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Info,
-  Check,
   Flame,
   Bookmark
 } from 'lucide-react';
@@ -17,20 +16,13 @@ import { MenuCategoryId, MenuItem } from '../types';
 
 export const MenuBook: React.FC = () => {
   const [activeCategoryId, setActiveCategoryId] = useState<MenuCategoryId>('galettes');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'signature' | 'vegetarian' | 'local'>('all');
   const [selectedItemForDetails, setSelectedItemForDetails] = useState<MenuItem | null>(null);
 
   const activeCategoryIndex = MENU_CATEGORIES.findIndex((c) => c.id === activeCategoryId);
   const currentCategory = MENU_CATEGORIES[activeCategoryIndex];
 
-  // Filter items in active category
-  const filteredItems = MENU_ITEMS.filter((item) => {
-    if (item.category !== activeCategoryId) return false;
-    if (selectedFilter === 'signature') return item.isSignature;
-    if (selectedFilter === 'vegetarian') return item.isVegetarian;
-    if (selectedFilter === 'local') return item.isLocal;
-    return true;
-  });
+  // All items in active category (direct, concise list)
+  const categoryItems = MENU_ITEMS.filter((item) => item.category === activeCategoryId);
 
   const goToPreviousCategory = () => {
     const prevIndex = (activeCategoryIndex - 1 + MENU_CATEGORIES.length) % MENU_CATEGORIES.length;
@@ -100,130 +92,65 @@ export const MenuBook: React.FC = () => {
           </div>
         </div>
 
-        {/* Subcategory Description & Filter Pills */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 bg-[#181310] p-4 sm:p-6 rounded-2xl border border-[#33261C]">
-          <div className="text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-2 mb-1">
-              <span className="font-serif-display text-2xl font-bold text-[#FDFBF7]">
-                {currentCategory.title}
-              </span>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#2E2218] text-[#F59E0B] border border-[#483526]">
-                {currentCategory.subtitle}
-              </span>
-            </div>
-            <p className="text-xs sm:text-sm text-[#A89C90] max-w-xl">
-              {currentCategory.description}
-            </p>
-          </div>
-
-          {/* Filters */}
-          <div className="flex flex-wrap items-center gap-2 text-xs">
-            <button
-              onClick={() => setSelectedFilter('all')}
-              className={`px-3 py-1.5 rounded-lg border transition-colors cursor-pointer ${
-                selectedFilter === 'all'
-                  ? 'bg-[#3A2B1E] text-[#FBBF24] border-[#D97706]'
-                  : 'bg-[#15110E] text-[#A89B8F] border-[#2E231B] hover:text-white'
-              }`}
-            >
-              Tous ({MENU_ITEMS.filter((i) => i.category === activeCategoryId).length})
-            </button>
-            <button
-              onClick={() => setSelectedFilter('signature')}
-              className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5 transition-colors cursor-pointer ${
-                selectedFilter === 'signature'
-                  ? 'bg-[#3A2B1E] text-[#FBBF24] border-[#D97706]'
-                  : 'bg-[#15110E] text-[#A89B8F] border-[#2E231B] hover:text-white'
-              }`}
-            >
-              <Flame className="w-3 h-3 text-[#D97706]" />
-              <span>Signatures</span>
-            </button>
-            <button
-              onClick={() => setSelectedFilter('vegetarian')}
-              className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5 transition-colors cursor-pointer ${
-                selectedFilter === 'vegetarian'
-                  ? 'bg-[#3A2B1E] text-[#84CC16] border-[#65A30D]'
-                  : 'bg-[#15110E] text-[#A89B8F] border-[#2E231B] hover:text-white'
-              }`}
-            >
-              <span className="w-2 h-2 rounded-full bg-[#84CC16]" />
-              <span>Végétarien</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Menu Items Interactive Book / Grid Layout */}
-        <div className="relative min-h-[380px]">
-          {filteredItems.length === 0 ? (
-            <div className="text-center py-16 bg-[#16120E] rounded-2xl border border-[#2E2218]">
-              <p className="text-[#A89B8E] text-sm mb-3">Aucun plat ne correspond à ce filtre dans cette catégorie.</p>
-              <button
-                onClick={() => setSelectedFilter('all')}
-                className="text-xs text-[#FBBF24] underline hover:text-white"
+        {/* Menu Items Grid Layout */}
+        <div className="relative min-h-[300px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+            {categoryItems.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => setSelectedItemForDetails(item)}
+                className="p-5 sm:p-6 rounded-2xl bg-[#181310] border border-[#2F231A] hover:border-[#D97706]/70 transition-all duration-300 hover:shadow-xl hover:shadow-black/60 group cursor-pointer relative flex flex-col justify-between"
+                id={`menu-item-${item.id}`}
               >
-                Réinitialiser le filtre
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredItems.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => setSelectedItemForDetails(item)}
-                  className="p-5 sm:p-6 rounded-2xl bg-[#181310] border border-[#2F231A] hover:border-[#D97706]/70 transition-all duration-300 hover:shadow-xl hover:shadow-black/60 group cursor-pointer relative flex flex-col justify-between"
-                  id={`menu-item-${item.id}`}
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-4 mb-2">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-serif-display text-xl sm:text-2xl font-bold text-[#FDFBF7] group-hover:text-[#FBBF24] transition-colors">
-                          {item.name}
-                        </h3>
-                        {item.isSignature && (
-                          <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#3B2514] text-[#F59E0B] border border-[#78350F] font-semibold">
-                            <Flame className="w-2.5 h-2.5" />
-                            Signature
-                          </span>
-                        )}
-                        {item.isVegetarian && (
-                          <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#182612] text-[#84CC16] border border-[#2D4A1D]">
-                            Végétarien
-                          </span>
-                        )}
-                      </div>
-                      <div className="font-serif-display text-xl sm:text-2xl font-bold text-[#F59E0B] shrink-0">
-                        {item.price.toFixed(2).replace('.', ',')} €
-                      </div>
-                    </div>
-
-                    <p className="text-sm text-[#B8ACA0] leading-relaxed mb-4 font-light">
-                      {item.description}
-                    </p>
-                  </div>
-
-                  {/* Sommelier Pairing or Artisan Footnote */}
-                  <div className="pt-3 border-t border-[#261D16] flex items-center justify-between text-xs text-[#8F8174]">
-                    {item.sommelierPairing ? (
-                      <div className="flex items-center gap-1.5 text-[#E0A96D] group-hover:text-[#FBBF24] transition-colors">
-                        <Wine className="w-3.5 h-3.5 text-[#D97706]" />
-                        <span className="italic truncate max-w-[280px]">
-                          Accord Alexis : {item.sommelierPairing}
+                <div>
+                  <div className="flex items-start justify-between gap-4 mb-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-serif-display text-xl sm:text-2xl font-bold text-[#FDFBF7] group-hover:text-[#FBBF24] transition-colors">
+                        {item.name}
+                      </h3>
+                      {item.isSignature && (
+                        <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#3B2514] text-[#F59E0B] border border-[#78350F] font-semibold">
+                          <Flame className="w-2.5 h-2.5" />
+                          Signature
                         </span>
-                      </div>
-                    ) : (
-                      <span className="text-[11px] text-[#7A6E63]">Fait maison à Dozulé</span>
-                    )}
-
-                    <span className="text-[11px] text-[#A89A8E] group-hover:text-[#F59E0B] flex items-center gap-1">
-                      <Info className="w-3 h-3" />
-                      Détails
-                    </span>
+                      )}
+                      {item.isVegetarian && (
+                        <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#182612] text-[#84CC16] border border-[#2D4A1D]">
+                          Végétarien
+                        </span>
+                      )}
+                    </div>
+                    <div className="font-serif-display text-xl sm:text-2xl font-bold text-[#F59E0B] shrink-0">
+                      {item.price.toFixed(2).replace('.', ',')} €
+                    </div>
                   </div>
+
+                  <p className="text-sm text-[#B8ACA0] leading-relaxed mb-4 font-light">
+                    {item.description}
+                  </p>
                 </div>
-              ))}
-            </div>
-          )}
+
+                {/* Sommelier Pairing or Artisan Footnote */}
+                <div className="pt-3 border-t border-[#261D16] flex items-center justify-between text-xs text-[#8F8174]">
+                  {item.sommelierPairing ? (
+                    <div className="flex items-center gap-1.5 text-[#E0A96D] group-hover:text-[#FBBF24] transition-colors">
+                      <Wine className="w-3.5 h-3.5 text-[#D97706]" />
+                      <span className="italic truncate max-w-[280px]">
+                        Accord Alexis : {item.sommelierPairing}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-[11px] text-[#7A6E63]">Fait maison à Dozulé</span>
+                  )}
+
+                  <span className="text-[11px] text-[#A89A8E] group-hover:text-[#F59E0B] flex items-center gap-1">
+                    <Info className="w-3 h-3" />
+                    Détails
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Page Switcher Navigation Arrows (Quick flip through categories) */}
