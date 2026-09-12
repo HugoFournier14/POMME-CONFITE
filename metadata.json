@@ -1,0 +1,6 @@
+{
+  "name": "La Pomme Confite",
+  "description": "Crêperie artisanale et chaleureuse à Dozulé en Pays d'Auge. Galettes au sarrasin de blé noir faites maison, crêpes gourmandes, glaces artisanales et dessert signature pomme confite.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

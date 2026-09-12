@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #110F0D;
+    color: #F8F5EE;
+    overflow-x: hidden;
+  }
+}
+
+.font-serif-display {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-sans-body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Custom scrollbar for refined restaurant feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #181512;
+}
+::-webkit-scrollbar-thumb {
+  background: #4A3E31;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D97706;
+}
+
+/* Soft gold glow utilities */
+.gold-glow {
+  text-shadow: 0 0 24px rgba(245, 158, 11, 0.35);
+}
+
+.gold-box-glow {
+  box-shadow: 0 10px 30px -10px rgba(217, 119, 6, 0.25);
+}
